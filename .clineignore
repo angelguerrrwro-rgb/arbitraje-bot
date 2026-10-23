@@ -1,0 +1,51 @@
+# .clineignore de arbitraje-bot: rutas que Cline no debe leer ni editar.
+# Sintaxis de .gitignore. Una línea que empieza por "!" vuelve a permitir una ruta.
+
+# --- (a) Secretos y claves ---
+# Claves de Binance y Telegram (triarb/config.py las carga desde .env)
+.env
+.env.*
+*.env
+.envrc
+!.env.example
+# Otros archivos de credenciales
+secrets.*
+*.secret
+*.secrets
+*credential*
+# Claves privadas y certificados (p. ej., claves Ed25519/RSA de la API de Binance o del VPS)
+*.pem
+*.key
+*.p12
+*.pfx
+*.keystore
+id_rsa*
+id_ed25519*
+*private*key*
+*keypair*.json
+*wallet*.json
+# Este mismo archivo, para que el asistente no pueda quitarse las reglas
+.clineignore
+
+# --- (b) Datos personales o bancarios ---
+# Registros del bot: operaciones, PnL, saldos y posiciones (también si cambias la carpeta)
+logs/
+*.log
+ejecuciones*.csv
+oportunidades*.csv
+carry*.csv
+carry_estado_*.json
+# Bases de datos locales
+*.db
+*.sqlite
+*.sqlite3
+
+# --- (c) Carpetas pesadas o generadas (solo harían perder tiempo al modelo local) ---
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+# Datos de mercado descargados (~330 MB, públicos y regenerables).
+# Los resúmenes *_summary.json son pequeños y sí se pueden leer.
+research/data/*
+!research/data/*_summary.json

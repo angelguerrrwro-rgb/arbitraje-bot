@@ -1,0 +1,14 @@
+[Unit]
+Description=Carry spot + perpetuo (modo papel)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=__USER__
+WorkingDirectory=__DIR__
+ExecStart=__DIR__/.venv/bin/python -m triarb carry --plataforma binance --capital 500
+Restart=always
+RestartSec=30
+
+[Install]
+WantedBy=multi-user.target

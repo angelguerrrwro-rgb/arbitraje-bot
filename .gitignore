@@ -1,0 +1,7 @@
+.env
+config.toml
+logs/
+.venv/
+__pycache__/
+.pytest_cache/
+research/data/

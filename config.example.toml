@@ -1,0 +1,84 @@
+# Copia este archivo como config.toml y ajústalo.
+# Las claves de API NO van aquí: van en .env (ver .env.example).
+
+# "escanear" → solo detecta y registra oportunidades (no necesita claves)
+# "papel"    → simula las órdenes con tu latencia real y saldos ficticios (no necesita claves)
+# "testnet"  → órdenes reales en testnet.binance.vision (dinero de mentira, claves de testnet)
+# "real"     → DINERO REAL. Además hay que arrancar con --confirmo-dinero-real
+modo = "papel"
+
+[mercado]
+# Activos que se pueden usar en las rutas. Vacío = todos (miles de rutas, mucha CPU).
+# Si vives en la UE, Binance no te deja operar USDT: quítalo y usa USDC como base.
+activos = [
+  "USDT", "USDC", "FDUSD", "BTC", "ETH", "BNB", "SOL", "XRP", "ADA", "DOGE", "TRX", "LINK",
+  "LTC", "DOT", "AVAX", "BCH", "SHIB", "PEPE", "SUI", "TON", "NEAR", "APT", "ARB", "OP",
+  "UNI", "ATOM", "ETC", "FIL", "EUR",
+]
+# "libro"       → mejor compra/venta al instante (@bookTicker). Lo más rápido.
+# "profundidad" → 5/10/20 niveles cada 100 ms (@depth). Permite operar más tamaño.
+fuente = "libro"
+niveles = 10
+# 3 = triangular. 4 = rutas de cuatro tramos (muchas más rutas).
+longitud_max_ruta = 3
+
+# Activo en el que empieza y acaba cada ciclo, y tamaño por operación en ese activo.
+[bases.USDT]
+min = 10
+max = 100
+
+# [bases.USDC]
+# min = 10
+# max = 100
+
+[estrategia]
+# Comisión taker en %. 0.1 normal, 0.075 pagando con BNB, menos con nivel VIP.
+comision_pct = 0.1
+# Pares con comisión distinta (promociones de Binance), en %.
+comisiones_por_par = { }
+# Beneficio mínimo neto (después de comisiones) para considerar una oportunidad.
+beneficio_min_pct = 0.0
+beneficio_min_usd = 0.0
+# Solo con fuente = "profundidad": descartar libros más viejos que esto.
+edad_max_ms = 300
+# No ejecutar si los datos de Binance llegan con más retraso que esto (se mide en vivo).
+# Con precios atrasados las órdenes FOK caducan y deshacer tramos cuesta comisiones. 0 = sin límite.
+retraso_max_ms = 1000
+# "lineal": un tramo detrás de otro, solo necesitas saldo de la base.
+# "paralela": los tres a la vez, más rápido, necesitas saldo de los tres activos.
+ejecucion = "lineal"
+# Si un tramo falla: "deshacer" (volver a la base a mercado) o "mantener".
+si_falla_un_tramo = "deshacer"
+# No repetir la misma ruta antes de este tiempo.
+enfriamiento_ms = 2000
+# Cuántos tamaños entre min y max se prueban para cada oportunidad.
+tamanos_a_probar = 6
+
+[riesgo]
+# Tope de intentos de ejecución antes de dejar de operar (0 = sin tope). Empieza con 1.
+max_ejecuciones = 1
+max_ejecuciones_por_minuto = 6
+# Si las pérdidas del día llegan a esto, deja de operar.
+perdida_max_diaria_usd = 5
+max_por_operacion_usd = 100
+
+[papel]
+# 0 = usar la latencia medida con Binance al arrancar.
+latencia_ms = 0
+saldos = { USDT = 1000 }
+# Peor precio extra para lo que no se ve en el libro al deshacer a mercado.
+deslizamiento_mercado_pct = 0.05
+
+[pantalla]
+activa = true
+filas = 15
+refresco_ms = 500
+
+[registro]
+carpeta = "logs"
+nivel = "INFO"
+guardar_oportunidades = true
+
+[telegram]
+# Requiere TELEGRAM_TOKEN y TELEGRAM_CHAT_ID en .env
+activo = false
